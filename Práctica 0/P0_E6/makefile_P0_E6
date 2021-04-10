@@ -1,0 +1,46 @@
+#opciones de compilación, mostrando todos los warnings (-Wall)
+CC = gcc -Wall
+
+#carpeta de la cabecera
+HEADER_FILES_DIR = .
+#opciones de compilación, indicando el directorio del archivo .h
+INCLUDES = -I $(HEADER_FILES_DIR)
+
+#nombre del archivo de salida (ejecutable)
+OUTPUT = programa6
+
+#fichero .h
+LIB_HEADERS = $(HEADER_FILES_DIR)/matriz.h
+
+#fuentes
+SRCS = asignarElemento.c crearMatriz.c destruirMatriz.c imprimirMatriz.c main.c obtenerElemento.c producto.c suma.c
+
+#ficheros .o: todos los .o con un análogo .c en SRCS
+OBJS = $(SRCS:.c=.o)
+
+#regla 1
+#esta regla crea el ejecutable con el programa
+#sus dependencias son los archivos .o
+$(OUTPUT): $(OBJS)
+	$(CC) -o $(OUTPUT) $(OBJS)
+
+#regla 2
+#con esta regla generamos los archivos .o a partir de sus correspondientes .c
+#cuando un archivo .c cambie solo se volverá a recompilar ese .c, en lugar de todos ellos
+#depende de los archivos .c y el archivo de cabecera .h
+%.o: %.c $(LIB_HEADERS)
+	$(CC) -c -o $@ $< $(INCLUDES)
+
+#regla 3
+#permite borrar el ejecutable y, a su vez, ejecuta clean
+#depende de clean
+cleanall: clean
+	rm -f $(OUTPUT)
+
+#regla 4
+#borra los archivos .o y los de backup
+#no tiene dependencias
+clean:
+	rm -f *.o *~
+
+	

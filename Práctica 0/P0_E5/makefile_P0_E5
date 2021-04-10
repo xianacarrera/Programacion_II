@@ -1,0 +1,35 @@
+#opciones de compilación, mostrando todos los warnings (-Wall)
+CC = gcc -Wall
+
+#nombre del archivo de salida (ejecutable)
+OUTPUT = programa5
+
+#fuentes
+SRCS = main.c
+
+#ficheros .o: archivo .o con su análogo .c en SRCS
+OBJS = $(SRCS:.c=.o)
+
+#regla 1
+#esta regla crea el ejecutable con el programa
+#su dependencia es el archivo .o
+$(OUTPUT): $(OBJS)
+	$(CC) -o $(OUTPUT) $(OBJS)
+
+#regla 2
+#con esta regla generamos el archivo .o a partir de su correspondiente .c
+#en este caso solo hay un .c, por lo que si este cambia se volverá a compilar todo el proyecto
+%.o: %.c
+	$(CC) -c -o $@ $<
+
+#regla 3
+#permite borrar el ejecutable y, a su vez, ejecuta clean
+#depende de clean
+cleanall: clean
+	rm -f $(OUTPUT)
+
+#regla 4
+#borra los archivos .o y los de backup
+#no tiene dependencias
+clean:
+	rm -f *.o *~
